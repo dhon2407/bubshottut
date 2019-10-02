@@ -5,28 +5,32 @@ using UnityEngine.SceneManagement;
 
 public class TapHandler : MonoBehaviour
 {
-    [SerializeField]
-    private BubbleController mainBubble = null;
+    private BubbleGenerator bubbleGenerator;
+
+    private void Start()
+    {
+        bubbleGenerator = GetComponent<BubbleGenerator>();
+    }
 
     void Update()
     {
         if (Input.GetMouseButtonUp(0))
         {
             Vector3 worldTapPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 bubblePosition = mainBubble.transform.position;
+            Vector3 bubblePosition = bubbleGenerator.mainBubble.transform.position;
 
             if (worldTapPosition.y > bubblePosition.y + 1.5f)
             {
                 Vector2 direction = (worldTapPosition - bubblePosition).normalized;
-                mainBubble.StartMove(direction);
+                bubbleGenerator.mainBubble.StartMove(direction);
             }
         }
 
         if (Input.GetKeyUp(KeyCode.Space))
-            mainBubble.ReflectMovement();
+            bubbleGenerator.mainBubble.ReflectMovement();
 
         if (Input.GetKeyUp(KeyCode.S))
-            mainBubble.StopMove();
+            bubbleGenerator.mainBubble.StopMove();
 
         if (Input.GetKeyUp(KeyCode.Escape))
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
