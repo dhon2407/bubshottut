@@ -35,4 +35,10 @@ public class BubbleController : MonoBehaviour
         isMoving = false;
         moveDirection = Vector2.zero;
     }
+
+    public void ReflectMovement()
+    {
+        Vector2 normalDirection = (moveDirection.x > 0) ? Vector2.right : Vector2.left;
+        moveDirection = Vector2.Reflect(moveDirection, normalDirection);
+    }
 }

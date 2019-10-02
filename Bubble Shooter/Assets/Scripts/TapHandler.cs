@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TapHandler : MonoBehaviour
 {
@@ -20,5 +21,15 @@ public class TapHandler : MonoBehaviour
                 mainBubble.StartMove(direction);
             }
         }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+            mainBubble.ReflectMovement();
+
+        if (Input.GetKeyUp(KeyCode.S))
+            mainBubble.StopMove();
+
+        if (Input.GetKeyUp(KeyCode.Escape))
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
     }
 }
