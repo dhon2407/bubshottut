@@ -13,10 +13,12 @@ public class BubbleController : MonoBehaviour
 
     private bool isMoving;
     private Vector2 moveDirection;
+    private Collider2D collider;
 
     private void Awake()
     {
         OnStopMove = new UnityEvent();
+        collider = GetComponent<Collider2D>();
     }
 
     void Update()
@@ -65,5 +67,10 @@ public class BubbleController : MonoBehaviour
             default:
                 return;
         }
+    }
+
+    public void GetSlot()
+    {
+        
     }
 }

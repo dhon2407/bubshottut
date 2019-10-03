@@ -7,6 +7,7 @@ TagManager:
   - SideWall
   - TopWall
   - Bubble
+  - Slot
   layers:
   - Default
   - TransparentFX
