@@ -5,6 +5,8 @@ using UnityEngine;
 public class BubbleGenerator : MonoBehaviour
 {
     public GameObject bubblePrefab = null;
+    public float bubbleRad;
+
     public BubbleController mainBubble { get => currentBubble; }
     
     [SerializeField]
@@ -16,6 +18,8 @@ public class BubbleGenerator : MonoBehaviour
             CreateNewBubble();
         else
             currentBubble.OnStopMove.AddListener(OnCurrentBubbleStop);
+
+        bubbleRad = currentBubble.GetComponent<CircleCollider2D>().radius;
     }
 
     private void CreateNewBubble()

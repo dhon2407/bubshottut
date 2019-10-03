@@ -8,6 +8,10 @@ public class BubbleController : MonoBehaviour
 {
     public UnityEvent OnStopMove;
 
+    //TODO should be set somewhere not in public
+    public Vector3 endPosition;
+
+
     [SerializeField]
     private float moveSpeed = 0;
 
@@ -42,6 +46,7 @@ public class BubbleController : MonoBehaviour
     {
         isMoving = false;
         moveDirection = Vector2.zero;
+        transform.position = endPosition;
         OnStopMove.Invoke();
     }
 
@@ -59,7 +64,7 @@ public class BubbleController : MonoBehaviour
                 ReflectMovement();
                 break;
             case "TopWall":
-            case "Bubble":
+            case "ActiveSlot":
                 StopMove();
                 break;
             default:
