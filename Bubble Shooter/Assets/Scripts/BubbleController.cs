@@ -12,7 +12,7 @@ public class BubbleController : MonoBehaviour
     private float moveSpeed = 0;
 
     private Vector2 moveDirection;
-    private Vector2 targetSlotLocation;
+    private BubbleSlot targetSlotLocation;
     public bool isMoving { get; private set; }
     public float radius { get; private set; }
 
@@ -52,12 +52,15 @@ public class BubbleController : MonoBehaviour
     private IEnumerator MoveToSlot()
     {
         float speed = 10;
-        while (Vector3.Distance(transform.position, targetSlotLocation) > 0.001f)
+        while (Vector3.Distance(transform.position, targetSlotLocation.transform.position) > 0.001f)
         {
             float step = speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, targetSlotLocation, step);
+            transform.position = Vector3.MoveTowards(transform.position, targetSlotLocation.transform.position, step);
             yield return null;
         }
+        targetSlotLocation.Occupy();
+
+        GetComponent<CircleCollider2D>().enabled = false;
     }
 
     public void ReflectMovement()
@@ -66,9 +69,9 @@ public class BubbleController : MonoBehaviour
         moveDirection = Vector2.Reflect(moveDirection, normalDirection);
     }
 
-    public void SetSlotLocation(Vector2 location)
+    public void SetSlotLocation(BubbleSlot slot)
     {
-        targetSlotLocation = location;
+        targetSlotLocation = slot;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

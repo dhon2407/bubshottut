@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,11 +29,31 @@ public class BubbleSlot : MonoBehaviour
     {
         if (other.tag == tag)
             adjacentSlots.Add(other.gameObject.GetComponent<BubbleSlot>());
+        else
+            Debug.Log(name + " triggered by" + other.name);
     }
 
     public IEnumerator UpdateCollider()
     {
         yield return null;
         collider.enabled = Active;
+    }
+
+    public void Activate()
+    {
+        if (Active) return;
+
+        Active = true;
+        StartCoroutine(UpdateCollider());
+    }
+
+    public void Occupy()
+    {
+        Empty = false;
+        foreach (var slot in adjacentSlots)
+            slot.Activate();
+
+        Active = false;
+        UpdateCollider();
     }
 }
