@@ -26,7 +26,7 @@ public class BubbleSlot : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Slot")
+        if (other.tag == tag)
             adjacentSlots.Add(other.gameObject.GetComponent<BubbleSlot>());
     }
 
@@ -35,6 +35,4 @@ public class BubbleSlot : MonoBehaviour
         yield return null;
         collider.enabled = Active;
     }
-
-
 }

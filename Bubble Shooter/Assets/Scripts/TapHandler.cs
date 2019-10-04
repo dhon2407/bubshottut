@@ -6,16 +6,18 @@ using UnityEngine.SceneManagement;
 
 public class TapHandler : MonoBehaviour
 {
-    public UnityEvent<Vector3> OnTapHold;
+    public class UnityEventOnTap : UnityEvent<Vector3> { }
+
+    public UnityEventOnTap OnTapHold;
 
     private bool tapHold;
     private BubbleGenerator bubbleGenerator;
     private Vector3 bubblePosition { get => bubbleGenerator.mainBubble.transform.position; }
-    Vector3 tapPosition;
+    private Vector3 tapPosition;
 
     private void Awake()
     {
-        
+        OnTapHold = new UnityEventOnTap();
     }
 
     private void Start()
