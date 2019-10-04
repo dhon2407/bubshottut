@@ -1,11 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class TapHandler : MonoBehaviour
 {
+    public UnityEvent<Vector3> OnTapHold;
+
+    private bool tapHold;
     private BubbleGenerator bubbleGenerator;
+    private Vector3 bubblePosition { get => bubbleGenerator.mainBubble.transform.position; }
+    Vector3 tapPosition;
+
+    private void Awake()
+    {
+        
+    }
 
     private void Start()
     {
@@ -14,17 +25,25 @@ public class TapHandler : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButton(0))
         {
-            Vector3 worldTapPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 bubblePosition = bubbleGenerator.mainBubble.transform.position;
+            tapPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            if (worldTapPosition.y > bubblePosition.y + 1.5f)
+            if (tapPosition.y > bubblePosition.y + 1.5f)
             {
-                Vector2 direction = (worldTapPosition - bubblePosition).normalized;
-                bubbleGenerator.mainBubble.StartMove(direction);
+                OnTapHold.Invoke(tapPosition);
+                tapHold = true;
             }
         }
+
+        if (Input.GetMouseButtonUp(0) && tapHold)
+        {
+            Vector2 direction = (tapPosition - bubblePosition).normalized;
+            bubbleGenerator.mainBubble.StartMove(direction);
+
+            tapHold = false;
+        }
+
 
         if (Input.GetKeyUp(KeyCode.Space))
             bubbleGenerator.mainBubble.ReflectMovement();
@@ -36,4 +55,5 @@ public class TapHandler : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
     }
+
 }

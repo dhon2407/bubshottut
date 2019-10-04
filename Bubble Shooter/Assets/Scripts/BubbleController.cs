@@ -11,7 +11,7 @@ public class BubbleController : MonoBehaviour
     [SerializeField]
     private float moveSpeed = 0;
 
-    private bool isMoving;
+    public bool isMoving { get; private set; }
     private Vector2 moveDirection;
 
     private void Awake()
