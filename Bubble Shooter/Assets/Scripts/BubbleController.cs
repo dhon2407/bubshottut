@@ -30,7 +30,29 @@ public class BubbleController : MonoBehaviour
     private void UpdateMovement()
     {
         if (isMoving)
-            transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
+        {
+            var nextPosition = moveDirection * moveSpeed * Time.deltaTime;
+            if (CheckSideCollision(ref nextPosition))
+                ReflectMovement();
+
+            transform.Translate(nextPosition);
+        }
+    }
+
+    private bool CheckSideCollision(ref Vector2 nextPosition)
+    {
+        var collisionPosition = transform.position;
+        collisionPosition.x += (Mathf.Sign(moveDirection.x) * radius);
+
+        var hit = Physics2D.Raycast(collisionPosition, nextPosition, nextPosition.magnitude);
+
+        if (hit.collider != null && hit.collider.CompareTag("SideWall"))
+        {
+            nextPosition = nextPosition.normalized * hit.distance;
+            return true;
+        }
+
+        return false;
     }
 
     public void StartMove(Vector2 direction)
@@ -46,7 +68,7 @@ public class BubbleController : MonoBehaviour
         isMoving = false;
         moveDirection = Vector2.zero;
         OnStopMove.Invoke();
-        StartCoroutine(MoveToSlot());
+        //StartCoroutine(MoveToSlot());
     }
 
     private IEnumerator MoveToSlot()
@@ -78,9 +100,6 @@ public class BubbleController : MonoBehaviour
     {
         switch (other.tag)
         {
-            case "SideWall":
-                ReflectMovement();
-                break;
             case "TopWall":
             case "Slot":
                 StopMove();

@@ -25,38 +25,23 @@ public class BubbleProjectionContoller : MonoBehaviour
             var rayCastOrigin = currentBubble.transform.position;
             var rayCastDirection = (tapPosition - rayCastOrigin).normalized;
 
-            rayCastOrigin.x += (Mathf.Sign(rayCastDirection.x) * currentBubble.radius);
-
-            bool trailDrawn = false;
-
-            while (!trailDrawn)
+            bool hitTopWall = false;
+            
+            do
             {
-                var hits = Physics2D.RaycastAll(rayCastOrigin, rayCastDirection);
+                var collisionSideOrigin = rayCastOrigin;
+                collisionSideOrigin.x += (Mathf.Sign(rayCastDirection.x) * currentBubble.radius);
+                var hit = Physics2D.Raycast(collisionSideOrigin, rayCastDirection);
 
-                Debug.Log("HITS : " + hits.Length);
-
-                //var hit = Physics2D.Raycast(rayCastOrigin, rayCastDirection);
-                int lastslotIndex = FindLastSlotIndex(hits);
-
-                if (hits.Length > 0)
+                if (hit.collider.CompareTag("SideWall"))
                 {
-                    var trueOrigin = rayCastOrigin;
-                    trueOrigin.x -= (Mathf.Sign(rayCastDirection.x) * currentBubble.radius);
-
-                    Debug.DrawLine(trueOrigin, hits[lastslotIndex].point, Color.cyan, 3f);
-                    rayCastOrigin = hits[lastslotIndex].point;
-                    rayCastOrigin.x -= (Mathf.Sign(rayCastDirection.x) * currentBubble.radius);
                     rayCastDirection = Vector2.Reflect(rayCastDirection, (rayCastDirection.x > 0) ? Vector2.right : Vector2.left);
+                    rayCastOrigin = hit.point;
+                    rayCastOrigin.x += (Mathf.Sign(rayCastDirection.x) * currentBubble.radius);
                 }
 
-                if (hits.Length > 1)
-                {
-                    currentBubble.SetSlotLocation(hits[lastslotIndex].collider.GetComponent<BubbleSlot>());
-                    trailDrawn = true;
-                }
+            } while (!hitTopWall);
 
-            }
-            Debug.DrawRay(currentBubble.transform.position, (tapPosition - currentBubble.transform.position).normalized, Color.cyan);
         }
     }
 
