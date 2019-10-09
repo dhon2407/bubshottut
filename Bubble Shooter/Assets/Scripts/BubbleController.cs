@@ -68,15 +68,13 @@ public class BubbleController : MonoBehaviour
         isMoving = false;
         moveDirection = Vector2.zero;
         OnStopMove.Invoke();
-        //StartCoroutine(MoveToSlot());
     }
 
     private IEnumerator MoveToSlot()
     {
-        float speed = 10;
         while (Vector3.Distance(transform.position, targetSlotLocation.transform.position) > 0.001f)
         {
-            float step = speed * Time.deltaTime;
+            float step = moveSpeed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, targetSlotLocation.transform.position, step);
             yield return null;
         }
@@ -101,8 +99,14 @@ public class BubbleController : MonoBehaviour
         switch (other.tag)
         {
             case "TopWall":
-            case "Slot":
                 StopMove();
+                break;
+            case "Slot":
+                if (other.GetComponent<BubbleSlot>().Equals(targetSlotLocation))
+                {
+                    StopMove();
+                    StartCoroutine(MoveToSlot());
+                }
                 break;
             default:
                 return;

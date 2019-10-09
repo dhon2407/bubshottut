@@ -11,7 +11,7 @@ public class BubbleSlot : MonoBehaviour
 
     [SerializeField]
     private bool Active;
-    private bool Empty;
+    public bool Empty { get; private set; }
 
     private void Awake()
     {
@@ -29,8 +29,6 @@ public class BubbleSlot : MonoBehaviour
     {
         if (other.tag == tag)
             adjacentSlots.Add(other.gameObject.GetComponent<BubbleSlot>());
-        else
-            Debug.Log(name + " triggered by" + other.name);
     }
 
     public IEnumerator UpdateCollider()
@@ -41,7 +39,7 @@ public class BubbleSlot : MonoBehaviour
 
     public void Activate()
     {
-        if (Active) return;
+        if (Active || !Empty) return;
 
         Active = true;
         StartCoroutine(UpdateCollider());
@@ -50,10 +48,10 @@ public class BubbleSlot : MonoBehaviour
     public void Occupy()
     {
         Empty = false;
+        Active = false;
+
         foreach (var slot in adjacentSlots)
             slot.Activate();
 
-        Active = false;
-        UpdateCollider();
     }
 }
